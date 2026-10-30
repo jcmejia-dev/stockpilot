@@ -4,7 +4,9 @@ import './style.css'
 import './tenant.css'
 import './branding.css'
 import './walkthrough.css'
+import './settings.css'
 import { mountMejoraWalkthrough } from './walkthrough.js'
+import { initMejoraSettings } from './settings.js'
 
 createApp(App).mount('#app')
 
@@ -24,8 +26,11 @@ new MutationObserver(records => {
   for (const record of records) for (const node of record.addedNodes) if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) rebrand(node)
 }).observe(document.body,{childList:true,subtree:true})
 
-// Replace the legacy icon-line hero with a real visual product walkthrough.
+// Replace the legacy icon-line hero with the visual product walkthrough.
 mountMejoraWalkthrough(document)
+
+// Add persistent settings, notifications, dark mode and installable mobile/PWA behavior.
+initMejoraSettings()
 
 // Preserve the existing preview account internally while displaying the Mejora-branded address.
 document.addEventListener('submit', event => {

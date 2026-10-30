@@ -1,0 +1,20 @@
+{
+  "name": "Mejora by Mejia Software",
+  "short_name": "Mejora",
+  "description": "Adaptive inventory management for modern businesses.",
+  "start_url": "/stockpilot/?source=pwa",
+  "scope": "/stockpilot/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f5f7f6",
+  "theme_color": "#065F46",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "/stockpilot/mejora-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
