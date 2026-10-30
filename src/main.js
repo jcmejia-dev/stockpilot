@@ -6,9 +6,11 @@ import './branding.css'
 import './walkthrough.css'
 import './settings.css'
 import './ux-enhancements.css'
+import './dashboard-preferences.css'
 import { mountMejoraWalkthrough } from './walkthrough.js'
 import { initMejoraSettings } from './settings.js'
 import { initMejoraUXEnhancements } from './ux-enhancements.js'
+import { initDashboardPreferences } from './dashboard-preferences.js'
 
 createApp(App).mount('#app')
 
@@ -36,6 +38,9 @@ initMejoraSettings()
 
 // Add premium dark-mode refinements, device-aware install UI, smooth motion and supplier contact tools.
 initMejoraUXEnhancements()
+
+// Let each user choose whether dashboard data is shown as KPI numbers, bars, pie, or text.
+initDashboardPreferences()
 
 // Preserve the existing preview account internally while displaying the Mejora-branded address.
 document.addEventListener('submit', event => {
