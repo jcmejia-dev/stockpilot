@@ -5,8 +5,10 @@ import './tenant.css'
 import './branding.css'
 import './walkthrough.css'
 import './settings.css'
+import './ux-enhancements.css'
 import { mountMejoraWalkthrough } from './walkthrough.js'
 import { initMejoraSettings } from './settings.js'
+import { initMejoraUXEnhancements } from './ux-enhancements.js'
 
 createApp(App).mount('#app')
 
@@ -29,8 +31,11 @@ new MutationObserver(records => {
 // Replace the legacy icon-line hero with the visual product walkthrough.
 mountMejoraWalkthrough(document)
 
-// Add persistent settings, notifications, dark mode and installable mobile/PWA behavior.
+// Add persistent settings, notifications, theme and installable mobile/PWA behavior.
 initMejoraSettings()
+
+// Add premium dark-mode refinements, device-aware install UI, smooth motion and supplier contact tools.
+initMejoraUXEnhancements()
 
 // Preserve the existing preview account internally while displaying the Mejora-branded address.
 document.addEventListener('submit', event => {
