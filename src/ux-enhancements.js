@@ -4,11 +4,22 @@ let revealObserver=null
 let supplierModal=null
 
 function esc(value){return String(value??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[ch]))}
-function phoneDigits(value){return String(value||'').replace(/[^0-9+]/g,'')}
 function businessName(){return document.querySelector('.workspace-copy strong')?.textContent?.trim()||'default-business'}
 function supplierKey(){return SUPPLIER_PREFIX+businessName().toLowerCase().replace(/[^a-z0-9]+/g,'-')}
 function loadSuppliers(){try{const v=JSON.parse(localStorage.getItem(supplierKey())||'[]');return Array.isArray(v)?v:[]}catch{return []}}
 function saveSuppliers(items){localStorage.setItem(supplierKey(),JSON.stringify(items))}
+function normalizePhone(value){
+  let raw=String(value||'').trim().replace(/[()\s.-]/g,'')
+  if(!raw)return''
+  if(raw.startsWith('00'))raw='+'+raw.slice(2)
+  if(/^09\d{9}$/.test(raw))return'+63'+raw.slice(1)
+  if(/^9\d{9}$/.test(raw))return'+63'+raw
+  if(/^63\d{10}$/.test(raw))return'+'+raw
+  if(/^\+\d{8,15}$/.test(raw))return raw
+  const digits=raw.replace(/\D/g,'')
+  return digits.length>=8&&digits.length<=15?`+${digits}`:''
+}
+function whatsappNumber(value){return normalizePhone(value).replace(/\D/g,'')}
 function isPhone(){
   if(navigator.userAgentData&&typeof navigator.userAgentData.mobile==='boolean')return navigator.userAgentData.mobile
   const ua=navigator.userAgent||''
@@ -82,12 +93,15 @@ function seedFromExistingTable(panel){
   saveSuppliers(seeded)
 }
 function supplierActions(s){
-  const phone=phoneDigits(s.phone),wa=phone.replace(/^\+/,'')
+  const phone=normalizePhone(s.phone),wa=whatsappNumber(s.phone),email=String(s.email||'').trim()
+  const subject=encodeURIComponent(`Mejora order inquiry — ${businessName()}`)
+  const body=encodeURIComponent(`Hi ${s.contactPerson||s.name||'there'}, I’m contacting you from ${businessName()} through Mejora regarding an order.`)
+  const waMessage=encodeURIComponent(`Hi ${s.contactPerson||s.name||'there'}, I’m contacting you from ${businessName()} through Mejora regarding an order.`)
   return [
-    phone?`<a class="supplier-action primary" href="tel:${esc(phone)}">Call</a>`:'',
-    phone?`<a class="supplier-action" href="sms:${esc(phone)}">SMS</a>`:'',
-    phone?`<a class="supplier-action" href="https://wa.me/${esc(wa)}" target="_blank" rel="noopener">WhatsApp</a>`:'',
-    s.email?`<a class="supplier-action" href="mailto:${esc(s.email)}">Email</a>`:'',
+    phone?`<a class="supplier-action primary" data-contact-kind="call" href="tel:${encodeURIComponent(phone)}" aria-label="Call ${esc(s.name)}" title="Open phone dialer">Call</a>`:'',
+    phone?`<a class="supplier-action" data-contact-kind="sms" href="sms:${encodeURIComponent(phone)}?body=${body}" aria-label="Text ${esc(s.name)}" title="Open SMS app">SMS</a>`:'',
+    wa?`<a class="supplier-action" data-contact-kind="whatsapp" href="https://wa.me/${wa}?text=${waMessage}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp ${esc(s.name)}" title="Open WhatsApp">WhatsApp</a>`:'',
+    email?`<a class="supplier-action" data-contact-kind="email" href="mailto:${encodeURIComponent(email)}?subject=${subject}&body=${body}" aria-label="Email ${esc(s.name)}" title="Open email app">Email</a>`:'',
     `<button class="supplier-action" data-edit-supplier="${esc(s.id)}">Edit</button>`
   ].filter(Boolean).join('')
 }
@@ -100,7 +114,7 @@ function ensureSupplierModal(){
   if(supplierModal)return supplierModal
   supplierModal=document.createElement('div')
   supplierModal.className='supplier-modal-backdrop'
-  supplierModal.innerHTML=`<div class="supplier-modal"><button class="supplier-modal-close" data-close-supplier>×</button><span class="settings-kicker">Supplier contact</span><h2 data-supplier-modal-title>Add supplier</h2><p>Save the details you need for fast reordering and contact.</p><form data-supplier-form><input type="hidden" name="id"><div class="supplier-form-grid"><label>Supplier / company<input name="name" required placeholder="e.g. Davao Moto Supply"></label><label>Contact person<input name="contactPerson" placeholder="e.g. Maria Santos"></label><label>Phone number<input name="phone" inputmode="tel" placeholder="e.g. +63 917 123 4567"></label><label>Email<input name="email" type="email" placeholder="orders@supplier.com"></label><label class="full">Address<input name="address" placeholder="Warehouse or store address"></label><label class="full">What do they supply?<input name="items" placeholder="e.g. Brake parts, oils, filters"></label><label class="full">Notes<textarea name="notes" rows="3" placeholder="Ordering schedule, minimum order, payment notes..."></textarea></label></div><button class="primary-button supplier-save" type="submit">Save supplier</button></form></div>`
+  supplierModal.innerHTML=`<div class="supplier-modal"><button class="supplier-modal-close" data-close-supplier>×</button><span class="settings-kicker">Supplier contact</span><h2 data-supplier-modal-title>Add supplier</h2><p>Save the details you need for fast reordering and contact.</p><form data-supplier-form><input type="hidden" name="id"><div class="supplier-form-grid"><label>Supplier / company<input name="name" required placeholder="e.g. Davao Moto Supply"></label><label>Contact person<input name="contactPerson" placeholder="e.g. Maria Santos"></label><label>Phone number<input name="phone" inputmode="tel" autocomplete="tel" placeholder="e.g. 0917 123 4567 or +63 917 123 4567"></label><label>Email<input name="email" type="email" autocomplete="email" placeholder="orders@supplier.com"></label><label class="full">Address<input name="address" autocomplete="street-address" placeholder="Warehouse or store address"></label><label class="full">What do they supply?<input name="items" placeholder="e.g. Brake parts, oils, filters"></label><label class="full">Notes<textarea name="notes" rows="3" placeholder="Ordering schedule, minimum order, payment notes..."></textarea></label></div><button class="primary-button supplier-save" type="submit">Save supplier</button></form></div>`
   document.body.appendChild(supplierModal)
   return supplierModal
 }
@@ -128,12 +142,21 @@ export function initMejoraUXEnhancements(){
   new MutationObserver(queueScan).observe(document.body,{childList:true,subtree:true,characterData:true})
   document.addEventListener('click',event=>{
     const target=event.target
+    const contact=target.closest('[data-contact-kind]')
+    if(contact){
+      const kind=contact.dataset.contactKind
+      contact.dataset.opened='true'
+      if(kind==='whatsapp')return
+      // tel:, sms: and mailto: are intentionally left to the operating system so
+      // the user's configured Phone, Messages or Mail app opens directly.
+      return
+    }
     if(target.closest('[data-add-supplier]'))return openSupplierModal()
     const edit=target.closest('[data-edit-supplier]');if(edit)return openSupplierModal(edit.dataset.editSupplier)
     const del=target.closest('[data-delete-supplier]');if(del){const id=del.dataset.deleteSupplier;if(confirm('Delete this supplier?')){saveSuppliers(loadSuppliers().filter(s=>String(s.id)!==String(id)));const panel=document.querySelector('.supplier-manager-panel');if(panel)renderSuppliers(panel)}return}
     if(target.closest('[data-close-supplier]')||target===supplierModal)return closeSupplierModal()
   })
   supplierModal.addEventListener('submit',event=>{
-    event.preventDefault();const form=event.target,data=Object.fromEntries(new FormData(form)),items=loadSuppliers(),id=data.id||String(Date.now()),record={id,name:data.name.trim(),contactPerson:data.contactPerson.trim(),phone:data.phone.trim(),email:data.email.trim(),address:data.address.trim(),items:data.items.trim(),notes:data.notes.trim()},index=items.findIndex(s=>String(s.id)===String(id));if(index>=0)items[index]=record;else items.unshift(record);saveSuppliers(items);closeSupplierModal();const panel=document.querySelector('.supplier-manager-panel');if(panel)renderSuppliers(panel)
+    event.preventDefault();const form=event.target,data=Object.fromEntries(new FormData(form)),items=loadSuppliers(),id=data.id||String(Date.now()),normalized=normalizePhone(data.phone),record={id,name:data.name.trim(),contactPerson:data.contactPerson.trim(),phone:normalized||data.phone.trim(),email:data.email.trim(),address:data.address.trim(),items:data.items.trim(),notes:data.notes.trim()},index=items.findIndex(s=>String(s.id)===String(id));if(index>=0)items[index]=record;else items.unshift(record);saveSuppliers(items);closeSupplierModal();const panel=document.querySelector('.supplier-manager-panel');if(panel)renderSuppliers(panel)
   })
 }
