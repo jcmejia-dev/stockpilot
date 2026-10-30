@@ -3,6 +3,8 @@ import App from './App.vue'
 import './style.css'
 import './tenant.css'
 import './branding.css'
+import './walkthrough.css'
+import { mountMejoraWalkthrough } from './walkthrough.js'
 
 createApp(App).mount('#app')
 
@@ -21,6 +23,9 @@ rebrand(document.body)
 new MutationObserver(records => {
   for (const record of records) for (const node of record.addedNodes) if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) rebrand(node)
 }).observe(document.body,{childList:true,subtree:true})
+
+// Replace the legacy icon-line hero with a real visual product walkthrough.
+mountMejoraWalkthrough(document)
 
 // Preserve the existing preview account internally while displaying the Mejora-branded address.
 document.addEventListener('submit', event => {
