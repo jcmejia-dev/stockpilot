@@ -1,4 +1,4 @@
-name: Deploy StockPilot preview to GitHub Pages
+name: Deploy Mejora preview to GitHub Pages
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: mejora-pages-v2
   cancel-in-progress: true
 
 jobs:
