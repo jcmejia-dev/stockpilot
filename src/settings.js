@@ -1,7 +1,7 @@
-const PREFS_KEY='mejora.preferences.v1'
+const PREFS_KEY='mejora.preferences.v2'
 const NOTIFICATIONS_KEY='mejora.notifications.v1'
 const MOBILE_URL=location.hostname.includes('github.io')?`${location.origin}/stockpilot/?source=mobile`:'https://jcmejia-dev.github.io/stockpilot/?source=mobile'
-const defaults={theme:'system',dataSaver:false,reducedMotion:false,compactMode:false,inAppNotifications:true,browserNotifications:false,lowStockAlerts:true,importAlerts:true,activityAlerts:true,autoLock:false}
+const defaults={theme:'light',dataSaver:false,reducedMotion:false,compactMode:false,inAppNotifications:true,browserNotifications:false,lowStockAlerts:true,importAlerts:true,activityAlerts:true,autoLock:false}
 let prefs=load(PREFS_KEY,defaults)
 let notifications=load(NOTIFICATIONS_KEY,[])
 let installPrompt=null
