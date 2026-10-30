@@ -1,5 +1,6 @@
 name: Deploy Mejora preview to GitHub Pages
 
+# Deployment marker: includes UX refinements for dark mode, device install flow and supplier contacts.
 on:
   push:
     branches: [main]
