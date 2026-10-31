@@ -1,6 +1,6 @@
-const CACHE='mejora-shell-v5'
+const CACHE='mejora-shell-v6'
 const BASE='/stockpilot/'
-const CORE=[BASE,`${BASE}manifest.webmanifest`,`${BASE}mejora-logo.svg`,`${BASE}mejora-auth-bg.webp?v=69`]
+const CORE=[BASE,`${BASE}manifest.webmanifest`,`${BASE}mejora-logo.svg`,`${BASE}mejora-auth-bg.webp?v=71`]
 
 async function put(cacheName,request,response){
   if(!response||!response.ok)return response
