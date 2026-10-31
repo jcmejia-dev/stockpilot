@@ -1,0 +1,1 @@
+Auth reference image is reconstructed at build time from raw base64 chunks committed in this folder so the selected visual can remain exact while the login/register form stays interactive.
