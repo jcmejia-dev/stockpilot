@@ -12,6 +12,7 @@ import './runtime-fixes.css'
 import './notification-position-fix.css'
 import './inventory-tools.css'
 import './auth-selected.css'
+import './auth-bg-direct-fix.css'
 import { mountMejoraWalkthrough } from './walkthrough.js'
 import { initMejoraSettings } from './settings.js'
 import { initMejoraUXEnhancements } from './ux-enhancements.js'
@@ -27,7 +28,6 @@ const app=createApp(App)
 installSessionPersistence(app)
 const vm=app.mount('#app')
 
-// Transitional brand layer while the GitHub Pages repository still uses the /stockpilot/ path.
 const rebrand=root=>{
   const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT)
   const nodes=[]
@@ -52,15 +52,11 @@ initRuntimeFixes()
 initInventoryTools(vm)
 initInspectDeterrent()
 
-// Force a service-worker update check so new JS/CSS is not hidden by an older PWA cache.
 if('serviceWorker' in navigator){
   setTimeout(()=>navigator.serviceWorker.getRegistration('/stockpilot/').then(reg=>reg?.update()).catch(()=>{}),800)
 }
 
-// Preserve the existing preview account internally while displaying the Mejora-branded address.
 document.addEventListener('submit',event=>{
   const email=event.target?.querySelector?.('input[name="email"]')
   if(email?.value==='jamie@mejora.demo')email.value='jamie@stockpilot.demo'
 },true)
-
-// Deployment marker: rebuilt selected auth composition with real UI elements.
