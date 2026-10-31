@@ -20,6 +20,7 @@ function save(snapshot){try{localStorage.setItem(SESSION_KEY,JSON.stringify(snap
 function clear(){localStorage.removeItem(SESSION_KEY)}
 function currentPage(){return document.querySelector('.content-wrap .hero-row h1')?.textContent?.trim()||''}
 function currentBusinessType(){return document.querySelector('.workspace-copy span')?.textContent?.trim()||'Other'}
+function closeNotifications(){document.querySelector('[data-close-notifications]')?.click()}
 
 function fixPageCopy(){
   const page=currentPage(),hero=document.querySelector('.content-wrap .hero-row')
@@ -69,9 +70,9 @@ export function initRuntimeFixes(app){
 
   document.addEventListener('click',event=>{
     if(event.target.closest('.logout-button,.logout-link'))clear()
-    if(event.target.closest('.nav-list .nav-item,.sidebar-bottom .nav-item'))document.querySelector('.mejora-notification-panel')?.classList.remove('open')
+    if(event.target.closest('.nav-list .nav-item,.sidebar-bottom .nav-item'))closeNotifications()
   },true)
-  document.addEventListener('keydown',event=>{if(event.key==='Escape')document.querySelector('.mejora-notification-panel')?.classList.remove('open')})
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')closeNotifications()})
   new MutationObserver(queue).observe(document.body,{childList:true,subtree:true,characterData:true})
   queue()
 }
