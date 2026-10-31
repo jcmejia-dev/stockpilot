@@ -19,8 +19,10 @@ import { initAppCleanup } from './app-cleanup.js'
 import { initRuntimeFixes } from './runtime-fixes.js'
 import { initInspectDeterrent } from './inspect-deterrent.js'
 import { initInventoryTools } from './inventory-tools.js'
+import { installSessionPersistence } from './session-persistence.js'
 
 const app=createApp(App)
+installSessionPersistence(app)
 const vm=app.mount('#app')
 
 // Transitional brand layer while the GitHub Pages repository still uses the /stockpilot/ path.
@@ -43,14 +45,17 @@ initMejoraSettings()
 initMejoraUXEnhancements()
 initDashboardPreferences()
 initAppCleanup()
-initRuntimeFixes(vm)
+initRuntimeFixes()
 initInventoryTools(vm)
 initInspectDeterrent()
+
+// Force a service-worker update check so new JS/CSS is not hidden by an older PWA cache.
+if('serviceWorker' in navigator){
+  setTimeout(()=>navigator.serviceWorker.getRegistration('/stockpilot/').then(reg=>reg?.update()).catch(()=>{}),800)
+}
 
 // Preserve the existing preview account internally while displaying the Mejora-branded address.
 document.addEventListener('submit',event=>{
   const email=event.target?.querySelector?.('input[name="email"]')
   if(email?.value==='jamie@mejora.demo')email.value='jamie@stockpilot.demo'
 },true)
-
-// Deployment marker: persisted preview session + inventory control tools.
