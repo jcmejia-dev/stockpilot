@@ -1,0 +1,6 @@
+/* Keep the topbar utilities and notification drawer anchored to the viewport right edge. */
+.topbar{justify-content:flex-start!important}
+.topbar .global-search[hidden]{display:none!important}
+.topbar-actions{margin-left:auto!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important}
+.mejora-notification-panel{position:fixed!important;left:auto!important;right:18px!important;inset-inline-start:auto!important;inset-inline-end:18px!important;top:64px!important;z-index:9999!important}
+@media(max-width:560px){.topbar-actions{margin-left:auto!important}.mejora-notification-panel{left:10px!important;right:10px!important;inset-inline-start:10px!important;inset-inline-end:10px!important;top:62px!important;width:auto!important}}
