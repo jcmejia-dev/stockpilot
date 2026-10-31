@@ -7,10 +7,12 @@ import './walkthrough.css'
 import './settings.css'
 import './ux-enhancements.css'
 import './dashboard-preferences.css'
+import './app-cleanup.css'
 import { mountMejoraWalkthrough } from './walkthrough.js'
 import { initMejoraSettings } from './settings.js'
 import { initMejoraUXEnhancements } from './ux-enhancements.js'
 import { initDashboardPreferences } from './dashboard-preferences.js'
+import { initAppCleanup } from './app-cleanup.js'
 
 createApp(App).mount('#app')
 
@@ -41,6 +43,9 @@ initMejoraUXEnhancements()
 
 // Let each user choose whether dashboard data is shown as KPI numbers, bars, pie, or text.
 initDashboardPreferences()
+
+// Remove duplicate/unneeded controls and turn every industry-specific menu into a working module.
+initAppCleanup()
 
 // Preserve the existing preview account internally while displaying the Mejora-branded address.
 document.addEventListener('submit', event => {
