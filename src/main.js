@@ -62,3 +62,5 @@ document.addEventListener('submit',event=>{
   const email=event.target?.querySelector?.('input[name="email"]')
   if(email?.value==='jamie@mejora.demo')email.value='jamie@stockpilot.demo'
 },true)
+
+// Deployment marker: rebuilt selected auth composition with real UI elements.
