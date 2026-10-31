@@ -52,3 +52,5 @@ document.addEventListener('submit',event=>{
   const email=event.target?.querySelector?.('input[name="email"]')
   if(email?.value==='jamie@mejora.demo')email.value='jamie@stockpilot.demo'
 },true)
+
+// Deployment marker: persisted preview session + inventory control tools.
