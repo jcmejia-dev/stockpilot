@@ -11,6 +11,7 @@ import './app-cleanup.css'
 import './runtime-fixes.css'
 import './notification-position-fix.css'
 import './inventory-tools.css'
+import './auth-selected.css'
 import { mountMejoraWalkthrough } from './walkthrough.js'
 import { initMejoraSettings } from './settings.js'
 import { initMejoraUXEnhancements } from './ux-enhancements.js'
@@ -20,6 +21,7 @@ import { initRuntimeFixes } from './runtime-fixes.js'
 import { initInspectDeterrent } from './inspect-deterrent.js'
 import { initInventoryTools } from './inventory-tools.js'
 import { installSessionPersistence } from './session-persistence.js'
+import { initSelectedAuth } from './auth-selected.js'
 
 const app=createApp(App)
 installSessionPersistence(app)
@@ -40,6 +42,7 @@ new MutationObserver(records=>{
   for(const record of records)for(const node of record.addedNodes)if(node.nodeType===Node.ELEMENT_NODE||node.nodeType===Node.TEXT_NODE)rebrand(node)
 }).observe(document.body,{childList:true,subtree:true})
 
+initSelectedAuth()
 mountMejoraWalkthrough(document)
 initMejoraSettings()
 initMejoraUXEnhancements()
