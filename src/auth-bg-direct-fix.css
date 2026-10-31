@@ -1,0 +1,10 @@
+/* Temporary direct background override to guarantee the approved image paints. */
+@media (min-width:900px){
+  .auth-page{
+    background-color:#f2efe7!important;
+    background-image:url('/stockpilot/mejora-auth-bg.webp?v=71')!important;
+    background-repeat:no-repeat!important;
+    background-position:center center!important;
+    background-size:100% 100%!important;
+  }
+}
