@@ -1,0 +1,1 @@
+The following chunks encode the approved auth reference image exactly enough for web delivery.
