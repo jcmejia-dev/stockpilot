@@ -1,6 +1,6 @@
-const CACHE='mejora-shell-v4'
+const CACHE='mejora-shell-v5'
 const BASE='/stockpilot/'
-const CORE=[BASE,`${BASE}manifest.webmanifest`,`${BASE}mejora-logo.svg`]
+const CORE=[BASE,`${BASE}manifest.webmanifest`,`${BASE}mejora-logo.svg`,`${BASE}mejora-auth-bg.webp?v=69`]
 
 async function put(cacheName,request,response){
   if(!response||!response.ok)return response
@@ -28,7 +28,7 @@ self.addEventListener('fetch',event=>{
     return
   }
 
-  if(['script','style','worker'].includes(request.destination)){
+  if(['script','style','worker','image'].includes(request.destination)){
     event.respondWith(fetch(request).then(response=>put(CACHE,request,response)).catch(()=>caches.match(request)))
     return
   }
