@@ -10,6 +10,7 @@ import './dashboard-preferences.css'
 import './app-cleanup.css'
 import './runtime-fixes.css'
 import './notification-position-fix.css'
+import './inventory-tools.css'
 import { mountMejoraWalkthrough } from './walkthrough.js'
 import { initMejoraSettings } from './settings.js'
 import { initMejoraUXEnhancements } from './ux-enhancements.js'
@@ -17,9 +18,10 @@ import { initDashboardPreferences } from './dashboard-preferences.js'
 import { initAppCleanup } from './app-cleanup.js'
 import { initRuntimeFixes } from './runtime-fixes.js'
 import { initInspectDeterrent } from './inspect-deterrent.js'
+import { initInventoryTools } from './inventory-tools.js'
 
 const app=createApp(App)
-app.mount('#app')
+const vm=app.mount('#app')
 
 // Transitional brand layer while the GitHub Pages repository still uses the /stockpilot/ path.
 const rebrand=root=>{
@@ -41,7 +43,8 @@ initMejoraSettings()
 initMejoraUXEnhancements()
 initDashboardPreferences()
 initAppCleanup()
-initRuntimeFixes(app)
+initRuntimeFixes(vm)
+initInventoryTools(vm)
 initInspectDeterrent()
 
 // Preserve the existing preview account internally while displaying the Mejora-branded address.
